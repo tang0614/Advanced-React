@@ -1,47 +1,31 @@
-import React, { Component } from "react";
-import { ThemeContextConsumer } from "./themeContext";
+import React, { useContext, useState } from "react";
+import { ThemeContext } from "./themeContext";
 import Header from "./Header";
 import Button from "./Button";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { name: "" };
-  }
+function App(props) {
+  const { name, onName } = useContext(ThemeContext);
+  const [inputName, setName] = useState("anna");
 
-  handleChange = (event) => {
-    const name = event.target.value;
-    this.setState({ name });
+  const handleChange = (event) => {
+    setName(event.target.value);
   };
 
-  render() {
-    return (
-      <div>
-        <Header />
+  const handleName = () => onName(inputName);
 
-        <ThemeContextConsumer>
-          {({ name, onName }) => (
-            <button
-              onClick={() => {
-                onName(this.state.name);
-              }}
-            >
-              {`${name} submit`}
-            </button>
-          )}
-        </ThemeContextConsumer>
-
-        <input
-          type="text"
-          name="username"
-          value={this.state.name}
-          onChange={this.handleChange}
-        ></input>
-
-        <Button />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Header />
+      <input
+        type="text"
+        name="username"
+        value={inputName}
+        onChange={handleChange}
+      ></input>
+      <button onClick={handleName}>{`${name}submit`}</button>
+      <Button />
+    </div>
+  );
 }
 
 export default App;

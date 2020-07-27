@@ -1,43 +1,32 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 const ThemeContext = React.createContext();
 const { Provider, Consumer } = ThemeContext;
 
-class ThemeContextProvider extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { theme: "dark", name: "" };
-  }
+function ThemeContextProvider(props) {
+  const [theme, setTheme] = useState("dark");
+  const [name, setName] = useState("");
 
-  handleChange() {
-    this.setState((prevState) => {
-      return {
-        theme: prevState.theme === "light" ? "dark" : "light",
-      };
+  const handleChange = () => {
+    setTheme((prevTheme) => {
+      return prevTheme === "light" ? "dark" : "light";
     });
-  }
+  };
 
-  handleName(name) {
-    this.setState({ name });
-  }
-
-  render() {
-    return (
-      <Provider
-        value={{
-          name: this.state.name,
-          onName: (name) => {
-            this.handleName(name);
-          },
-          theme: this.state.theme,
-          onChange: () => {
-            this.handleChange();
-          },
-        }}
-      >
-        {this.props.children}
-      </Provider>
-    );
-  }
+  const handleName = (inputname) => {
+    setName(inputname);
+  };
+  return (
+    <Provider
+      value={{
+        name,
+        onName: handleName,
+        theme,
+        onChange: handleChange,
+      }}
+    >
+      {props.children}
+    </Provider>
+  );
 }
 
 export { ThemeContextProvider, Consumer as ThemeContextConsumer, ThemeContext };
